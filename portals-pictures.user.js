@@ -6,6 +6,8 @@
 // @description    Show portal pictures in a dialog
 // @id             portals-pictures
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @updateURL      https://le-jeu.github.io/iitc-plugins/portals-pictures.user.js
+// @downloadURL    https://le-jeu.github.io/iitc-plugins/portals-pictures.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -16,8 +18,8 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'local';
-plugin_info.dateTimeVersion = '2021-04-30-095623';
+plugin_info.buildName = 'lejeu';
+plugin_info.dateTimeVersion = '2021-04-30-100526';
 plugin_info.pluginId = 'portals-pictures';
 //END PLUGIN AUTHORS NOTE
 
