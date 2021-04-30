@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Default base maps with labels above fields
 // @category       Map Tiles
-// @version        0.2.2
+// @version        0.2.3
 // @description    Print labels as an overlay of intel layer
 // @id             labels_layer
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-04-30-100526';
+plugin_info.dateTimeVersion = '2021-04-30-102557';
 plugin_info.pluginId = 'labels_layer';
 //END PLUGIN AUTHORS NOTE
 

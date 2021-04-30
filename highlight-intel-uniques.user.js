@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Highlight uniques captured/visited/scanned
 // @category       Highlighter
-// @version        1.5.4
+// @version        1.5.5
 // @description    Highlighter for unique visited/captured/scout controlled portals
 // @id             highlight-intel-uniques
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-04-30-100526';
+plugin_info.dateTimeVersion = '2021-04-30-102557';
 plugin_info.pluginId = 'highlight-intel-uniques';
 //END PLUGIN AUTHORS NOTE
 
