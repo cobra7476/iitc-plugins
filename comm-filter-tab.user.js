@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: COMM Filter Tab
 // @category       COMM
-// @version        0.1.5
+// @version        0.3.2
 // @description    Show virus in the regular Comm and add a new tab with portal/player name filter and event type filter.
 // @id             comm-filter-tab
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-05-01-161631';
+plugin_info.dateTimeVersion = '2021-05-04-171645';
 plugin_info.pluginId = 'comm-filter-tab';
 //END PLUGIN AUTHORS NOTE
 
@@ -31,30 +31,33 @@ plugin_info.pluginId = 'comm-filter-tab';
 // chat injection
 // ==============
 
-const renderText = function (text) {
+function renderText (text) {
   return $('<div/>').text(text.plain).html().autoLink();
 };
 
-const renderPortal = function (portal) {
+function renderPortal (portal) {
   var lat = portal.latE6/1E6, lng = portal.lngE6/1E6;
   var perma = window.makePermalink([lat,lng]);
   var js = 'window.selectPortalByLatLng('+lat+', '+lng+');return false';
+  var spanClass = "";
+  if (portal.team === 'RESISTANCE') spanClass = "res-light";
+  else if (portal.team === 'ENLIGHTENED') spanClass = "enl-light";
   return '<a onclick="'+js+'"'
     + ' title="'+portal.address+'"'
-    + ' href="'+perma+'" class="help">'
+    + ' href="'+perma+'" class="help portal ' + spanClass + '">'
     + window.chat.getChatPortalName(portal)
     + '</a>';
 };
 
-const renderFactionEnt = function (faction) {
-  var name = faction.team === 'ENLIGHTENED' ? 'Enlightened' : 'Resistance';
-  var spanClass = faction.team === 'ENLIGHTENED' ? TEAM_ENL : TEAM_RES;
+function renderFactionEnt (faction) {
+  var name = faction.team === 'RESISTANCE' ? 'Resistance' : 'Enlightened';
+  var spanClass = faction.team === 'RESISTANCE' ? TEAM_TO_CSS[TEAM_RES] : TEAM_TO_CSS[TEAM_ENL];
   return $('<div/>').html($('<span/>')
     .attr('class', spanClass)
     .text(name)).html();
 };
 
-const renderPlayer = function (player, at, sender) {
+function renderPlayer (player, at, sender) {
   var name = (sender) ? player.plain.slice(0, -2) : (at) ? player.plain.slice(1) : player.plain;
   var thisToPlayer = name === window.PLAYER.nickname;
   var spanClass = thisToPlayer ? 'pl_nudge_me' : (player.team + ' pl_nudge_player');
@@ -64,7 +67,7 @@ const renderPlayer = function (player, at, sender) {
     .text((at ? '@' : '') + name)).html();
 };
 
-const renderMarkupEntity = function (ent) {
+function renderMarkupEntity (ent) {
   switch (ent[0]) {
   case 'TEXT':
     return renderText(ent[1]);
@@ -83,7 +86,7 @@ const renderMarkupEntity = function (ent) {
   return $('<div/>').text(ent[0]+':<'+ent[1].plain+'>').html();
 };
 
-const renderMarkup = function (markup) {
+function renderMarkup (markup) {
   var msg = '';
   markup.forEach(function(ent, ind) {
     switch (ent[0]) {
@@ -105,7 +108,7 @@ const renderMarkup = function (markup) {
   return msg;
 };
 
-const renderTimeCell = function(time, classNames) {
+function renderTimeCell(time, classNames) {
   var ta = unixTimeToHHmm(time);
   var tb = unixTimeToDateTimeString(time, true);
   // add <small> tags around the milliseconds
@@ -113,16 +116,16 @@ const renderTimeCell = function(time, classNames) {
   return '<td><time class="' + classNames + '" title="'+tb+'" data-timestamp="'+time+'">'+ta+'</time></td>';
 };
 
-const renderNickCell = function(nick, classNames) {
+function renderNickCell(nick, classNames) {
   var i = ['<span class="invisep">&lt;</span>', '<span class="invisep">&gt;</span>'];
   return '<td>'+i[0]+'<mark class="' + classNames + '">'+ nick+'</mark>'+i[1]+'</td>';
 };
 
-const renderMsgCell = function(msg, classNames) {
+function renderMsgCell(msg, classNames) {
   return '<td class="' + classNames + '">'+msg+'</td>';
 };
 
-const renderMsgRow = function(data) {
+function renderMsgRow(data) {
   var timeClass = (data.msgToPlayer) ? 'pl_nudge_date' : '';
   var timeCell = renderTimeCell(data.time, timeClass);
 
@@ -144,7 +147,7 @@ const renderMsgRow = function(data) {
   return '<tr data-guid="' + data.guid + '" class="' + className + '">' + timeCell + nickCell + msgCell + '</tr>';
 };
 
-const updateOldNewHash = function(newData, storageHash, isOlderMsgs, isAscendingOrder) {
+function updateOldNewHash(newData, storageHash, isOlderMsgs, isAscendingOrder) {
   // handle guids reset before refactored chat
   if (storageHash.oldestGUID === undefined)
     storageHash.guids = [];
@@ -178,7 +181,7 @@ const updateOldNewHash = function(newData, storageHash, isOlderMsgs, isAscending
   }
 };
 
-const parseMsgData = function(data) {
+function parseMsgData(data) {
   var categories = data[2].plext.categories;
   var isPublic = (categories & 1) === 1;
   var isSecure = (categories & 2) === 2;
@@ -228,7 +231,7 @@ const parseMsgData = function(data) {
   };
 };
 
-const writeDataToHash = function(newData, storageHash, isPublicChannel, isOlderMsgs, isAscendingOrder) {
+function writeDataToHash(newData, storageHash, isPublicChannel, isOlderMsgs, isAscendingOrder) {
   updateOldNewHash(newData, storageHash, isOlderMsgs, isAscendingOrder);
 
   newData.result.forEach(function(json) {
@@ -247,7 +250,7 @@ const writeDataToHash = function(newData, storageHash, isPublicChannel, isOlderM
   });
 };
 
-const renderDivider = function(text) {
+function renderDivider(text) {
   return '<tr class="divider"><td><hr></td><td>' + text + '</td><td><hr></td></tr>';
 }
 
@@ -274,16 +277,18 @@ commFilter.rules = [
   { type: 'attack', plain: 'Your Portal |PORTAL| is under attack by |PLAYER' },
   { type: 'neutralize', plain: 'Your Portal |PORTAL| neutralized by |PLAYER' },
   { type: 'kinetic', plain: 'Your Kinetic Capsule is now ready.' },
-  { type: 'first capture', plain: '[secure] | |PLAYER| captured their first Portal.' },
-  { type: 'first field', plain: '[secure] | |PLAYER| created their first Control Field' },
-  { type: 'first link', plain: '[secure] | |PLAYER| created their first Link.' },
+  { type: 'first capture', plain: 'SECURE| |PLAYER| captured their first Portal.' },
+  { type: 'first field', plain: 'SECURE| |PLAYER| created their first Control Field' },
+  { type: 'first link', plain: 'SECURE| |PLAYER| created their first Link.' },
+  { type: 'drone returned', plain: 'Drone returned to Agent by |PLAYER' },
+  { type: 'drone returned', plain: 'Your Drone returned by |PLAYER' },
   // { type: 'chat', plain: 'SENDER| blah |AT_PLAYER| blah |AT_PLAYER| blah ' },
   // { type: 'faction chat', plain: '[secure] |SENDER| blah |AT_PLAYER| blah |AT_PLAYER| blah ' },
 ];
 
-const markupType = new Set(['TEXT', 'PLAYER', 'PORTAL', 'FACTION', 'NUMBER', 'AT_PLAYER', 'SENDER']);
+const markupType = new Set(['TEXT', 'PLAYER', 'PORTAL', 'FACTION', 'NUMBER', 'AT_PLAYER', 'SENDER', 'SECURE']);
 
-const buildRules = function () {
+function buildRules () {
   for (const r of commFilter.rules) {
     const items = r.plain.split('|');
     const markup = [];
@@ -306,7 +311,7 @@ const buildRules = function () {
   }
 };
 
-const matchChat = function (data) {
+function matchChat (data) {
   if (data.markup.some((ent) => ent[0] === 'SENDER')) {
     if (data.markup[0][0] === 'SECURE')
       return 'chat faction';
@@ -315,7 +320,7 @@ const matchChat = function (data) {
   return 'unknown';
 };
 
-const matchRule = function (data) {
+function matchRule (data) {
   for (const r of commFilter.rules) {
     if (r.markup.length !== data.markup.length)
       continue;
@@ -340,7 +345,7 @@ const matchRule = function (data) {
   return matchChat(data);
 };
 
-const reParseData = function (data) {
+function reParseData (data) {
   let parse = {};
   let markup = data.markup;
   let portals = markup.filter(ent => ent[0] === 'PORTAL').map(ent => ent[1]);
@@ -390,7 +395,7 @@ const reParseData = function (data) {
 
 commFilter.viruses = new Map();
 
-const findVirus = function (guids, data) {
+function findVirus (guids, data) {
   commFilter.viruses.clear();
   let last_data = {};
   for (const guid of guids) {
@@ -426,7 +431,7 @@ const findVirus = function (guids, data) {
   }
 };
 
-const computeMUs = function (guids, data) {
+function computeMUs (guids, data) {
   let agents = new Map();
   let sum = 0;
   for (const guid of guids) {
@@ -452,7 +457,7 @@ const computeMUs = function (guids, data) {
   }
 };
 
-const updateCSS = function () {
+function updateCSS () {
   let elm = document.getElementById('comm-filter-css');
   if (!elm) {
     elm = document.createElement('style');
@@ -529,7 +534,7 @@ const updateCSS = function () {
   elm.textContent = content;
 };
 
-const reparsePublicData = function () {
+function reparsePublicData () {
   const public = window.chat._public;
   $.each(public.data, function(ind, msg) {
     if (msg[4]['comm-filter'] === undefined)
@@ -545,7 +550,7 @@ const reparsePublicData = function () {
 };
 
 // filter tab
-const tabToogle = function () {
+function tabToogle () {
   $('#chat, #chatinput').show();
   $('#chatinput mark').css('cssText', 'color: #bbb !important').text('');
   $('#chat > div').hide();
@@ -556,7 +561,7 @@ const tabToogle = function () {
   window.chat.renderData(window.chat._public.data, 'chatfilter', true);
 };
 
-const tabCreate = function () {
+function tabCreate () {
   $('#chatcontrols').append('<a>Filter</a>');
   $('#chatcontrols a:last').click(tabToogle);
   $('#chat')
@@ -598,7 +603,7 @@ const tabCreate = function () {
 
 window.plugin.commFilter = commFilter;
 
-var setup = function() {
+function setup () {
   $("<style>")
     .prop("type", "text/css")
     .html('\
@@ -622,6 +627,14 @@ var setup = function() {
   color: #ff6;\
   background-color: #550;\
   margin-right: .2rem;\
+}\
+\
+#chat .portal.enl-light {\
+  color: #5e5;\
+}\
+\
+#chat .portal.res-light {\
+  color: #2de;\
 }\
 \
 .pl_nudge_date {\
@@ -658,6 +671,20 @@ var setup = function() {
 \
 #chat tr {\
   border-bottom: 1px solid #5558;\
+}\
+\
+#chat td {\
+  padding-bottom: 2px;\
+  padding-top: 2px;\
+}\
+\
+#chat table {\
+  table-layout: unset;\
+}\
+\
+#chat td:first-child,\
+#chat td:nth-child(2) {\
+  width: unset;\
 }\
 ')
     .appendTo("head");
