@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Player Inventory
 // @category       Info
-// @version        0.2.27
+// @version        0.2.28
 // @description    View inventory and highlight portals with keys at any zoom. Can be used with the official plugins Keys and Keys on map to show the number of keys on the map.
 // @id             player-inventory
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-05-04-171645';
+plugin_info.dateTimeVersion = '2021-05-06-130754';
 plugin_info.pluginId = 'player-inventory';
 //END PLUGIN AUTHORS NOTE
 
@@ -769,7 +769,7 @@ function createCapsuleTable(inventory, capsule) {
 
     const row = L.DomUtil.create('tr', null, table);
     L.DomUtil.create('td', null, row).textContent = total;
-    L.DomUtil.create('td', null, row);
+    if (capsule.type !== "KEY_CAPSULE") L.DomUtil.create('td', null, row);
     L.DomUtil.create('td', null, row).appendChild(a);
   }
   const medias = Object.values(capsule.medias).sort((a,b) => localeCompare(a.name, b.name));
@@ -1072,16 +1072,15 @@ function setupCSS() {
   text-align: center;\
 }\
 \
-.inventory-box .medias tr td:last-child,\
-.inventory-box .keys tr td:last-child {\
+.inventory-box tr td:last-child {\
   text-align: left;\
 }\
 \
-.inventory-box .all tr td:last-child,\
-.inventory-box .keys tr td:last-child,\
-.inventory-box .medias tr td:last-child,\
-.inventory-box .capsule tr td:last-child {\
-  width: 100%;\
+.inventory-box .all tr td:first-child,\
+.inventory-box .keys tr td:first-child,\
+.inventory-box .medias tr td:first-child,\
+.inventory-box .capsule tr td:first-child {\
+  width: 2em;\
 }\
 \
 .inventory-box td {\
