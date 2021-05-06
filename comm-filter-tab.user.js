@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: COMM Filter Tab
 // @category       COMM
-// @version        0.3.2
+// @version        0.4.1
 // @description    Show virus in the regular Comm and add a new tab with portal/player name filter and event type filter.
 // @id             comm-filter-tab
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-05-06-130754';
+plugin_info.dateTimeVersion = '2021-05-06-155434';
 plugin_info.pluginId = 'comm-filter-tab';
 //END PLUGIN AUTHORS NOTE
 
@@ -482,13 +482,13 @@ function updateCSS () {
   for (const guid of window.chat._public.guids) {
     const n = window.chat._public.data[guid][3];
     const d = window.chat._public.data[guid][4]['comm-filter'];
-    let show = commFilter.filters.type == d.type;
+    let show = commFilter.filters.type.includes(d.type);
 
     // special type
-    if (commFilter.filters.type == 'all') show = true;
-    if (commFilter.filters.type == 'chat all' && (d.type == 'chat' || d.type == 'chat faction')) show = true;
-    if (commFilter.filters.type == 'chat public' && d.type == 'chat') show = true;
-    if (commFilter.filters.type == 'virus' && d.virus) show = true;
+    if (commFilter.filters.type.includes('all')) show = true;
+    if (commFilter.filters.type.includes('chat all') && (d.type == 'chat' || d.type == 'chat faction')) show = true;
+    if (commFilter.filters.type.includes('chat public') && d.type == 'chat') show = true;
+    if (commFilter.filters.type.includes('virus') && d.virus) show = true;
 
     let match = false;
     if (n.includes(commFilter.filters.text)) match = true;
@@ -584,7 +584,7 @@ function tabCreate () {
   commFilter.filtersDiv = document.querySelector('#chat-filters');
   commFilter.filtersDiv.innerHTML =
     '<input id="filter-text" placeholder="Portal or Agent">'
-    + '<select id="filter-type">'
+    + '<select id="filter-type" multiple size="1">'
     + Array.from(events).map((s) => '<option value="'+s+'">'+s+'</option>')
     + '</select>';
   $('#filter-text').on('change', function (ev) {
@@ -592,10 +592,12 @@ function tabCreate () {
     updateCSS();
   });
   $('#filter-type').on('change', function (ev) {
-    commFilter.filters.type = ev.target.value;
+    commFilter.filters.type =
+      Array.from(ev.target.options)
+        .filter((o) => o.selected)
+        .map((o) => o.value);
     updateCSS();
   });
-
 };
 
 
@@ -653,6 +655,15 @@ function setup () {
 	padding: unset;\
 }\
 \
+#chat-filters.desktop {\
+  z-index: 1;\
+}\
+\
+#chat-filters.desktop #filter-type:hover {\
+  margin-bottom: -8em;\
+  height: 10em;\
+}\
+\
 #chatfilter table {\
   margin-bottom: 2.5rem;\
 }\
@@ -696,10 +707,13 @@ function setup () {
   // plugin
   commFilter.filters = {
     text: '',
-    type: 'all',
+    type: ['all'],
   };
   buildRules();
   tabCreate();
+
+  if (!window.isSmartphone())
+    commFilter.filtersDiv.classList.add('desktop');
 
   if (useAndroidPanes()) {
     android.addPane('comm-filter-tab', 'Comm Filter', 'ic_action_view_as_list');
