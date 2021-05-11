@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-05-06-155434';
+plugin_info.dateTimeVersion = '2021-05-11-074155';
 plugin_info.pluginId = 'labels_layer';
 //END PLUGIN AUTHORS NOTE
 
