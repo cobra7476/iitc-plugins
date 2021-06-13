@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Cache visible portals
 // @category       Cache
-// @version        0.2.0
+// @version        0.3.0
 // @description    Cache the data of visible portals and use this to populate the map when possible
 // @id             cache-portals
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-05-11-074155';
+plugin_info.dateTimeVersion = '2021-06-13-100832';
 plugin_info.pluginId = 'cache-portals';
 //END PLUGIN AUTHORS NOTE
 
@@ -32,7 +32,7 @@ cachePortals.MIN_ZOOM = 15; // zoom min to show data
 cachePortals.MAX_AGE = 12 * 60 * 60; // 12 hours max age for cached data
 
 function openDB() {
-  var rq = window.indexedDB.open("cache-portals", 2);
+  var rq = window.indexedDB.open("cache-portals", 3);
   rq.onupgradeneeded = function (event) {
     var db = event.target.result;
     if (event.oldVersion < 1) {
@@ -56,6 +56,10 @@ function openDB() {
         var key = "z" + i;
         store.createIndex(key, key, { unique: false });
       }
+    }
+    if (event.oldVersion < 3) {
+      var store = db.createObjectStore("portals_history", { keyPath: "id", autoIncrement: true });
+      store.createIndex("guid", "guid", { unique: false });
     }
   };
   rq.onsuccess = function (event) {
@@ -84,10 +88,41 @@ function cleanup() {
   };
 }
 
+function updateLocationHistory(portal) {
+  var tx = cachePortals.db.transaction("portals_history", "readwrite");
+  var store = tx.objectStore("portals_history");
+  var index = store.index("guid");
+  index.getAll(portal.guid).onsuccess = function (event) {
+    var portals = event.target.result;
+    if (portals.length > 0) {
+      var last = portals[portals.length-1];
+      if (last.latE6 === portal.latE6 && last.lngE6 === portal.lngE6) {
+        last.lastSeen = Date.now();
+        store.put(last)
+        return;
+      }
+      window.map.fire('portalChange:location', { prev: last, cur: portal });
+      var link = window.makePermalink([
+        (portal.latE6*1e-6).toFixed(6),
+        (portal.lngE6*1e-6).toFixed(6)
+      ]);
+      alert(`Portal <a href="${link}">${portal.guid}</a> has moved from ${(last.latE6*1e-6).toFixed(6)},${(last.lngE6*1e-6).toFixed(6)} to ${(portal.latE6*1e-6).toFixed(6)},${(portal.lngE6*1e-6).toFixed(6)}`);
+    }
+    store.add({
+      guid: portal.guid,
+      latE6: portal.latE6,
+      lngE6: portal.lngE6,
+      date: portal.timestamp,
+      lastSeen: Date.now(),
+    });
+  };
+}
+
 function putPortal(portal) {
   if (!cachePortals.db) return;
   var tx = cachePortals.db.transaction("portals", "readwrite");
   tx.objectStore("portals").put(portal);
+  updateLocationHistory(portal);
 }
 
 function portalDetailLoaded(data) {
@@ -98,7 +133,7 @@ function portalDetailLoaded(data) {
       latE6: data.details.latE6,
       lngE6: data.details.lngE6,
       timestamp: data.details.timestamp,
-      loadtime: +Date.now(),
+      loadtime: Date.now(),
     };
     L.Util.extend(portal, coordsToTiles(portal.latE6, portal.lngE6));
     putPortal(portal);
