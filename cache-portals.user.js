@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Cache visible portals
 // @category       Cache
-// @version        0.4.1
+// @version        0.4.2
 // @description    Cache the data of visible portals and use this to populate the map when possible
 // @id             cache-portals
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-06-29-180236';
+plugin_info.dateTimeVersion = '2021-06-29-183151';
 plugin_info.pluginId = 'cache-portals';
 //END PLUGIN AUTHORS NOTE
 
@@ -27,11 +27,6 @@ plugin_info.pluginId = 'cache-portals';
 var cachePortals = {};
 
 var MAX_ZOOM = 22;
-
-cachePortals.MIN_ZOOM = 15; // zoom min to show data
-cachePortals.MAX_AGE = 12 * 60 * 60; // 12 hours max age for cached data
-
-cachePortals.MAX_LOCATION_AGE = 30 * 24 * 60 * 60; // 1 month for location history
 
 cachePortals.SETTINGS_KEY = "plugins-cache-portals";
 cachePortals.settings = {
@@ -239,7 +234,7 @@ function mapDataRefreshEnd() {
   var portals = [];
   for (var guid in window.portals) {
     var options = window.portals[guid].options;
-    if (options.level === undefined) continue;
+    if (options.data.level === undefined) continue;
     var portal = {
       guid: options.guid,
       team: options.data.team,
