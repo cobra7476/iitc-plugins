@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Player Inventory
 // @category       Info
-// @version        0.2.28
+// @version        0.2.29
 // @description    View inventory and highlight portals with keys at any zoom. Can be used with the official plugins Keys and Keys on map to show the number of keys on the map.
 // @id             player-inventory
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-07-14-142221';
+plugin_info.dateTimeVersion = '2021-07-18-104630';
 plugin_info.pluginId = 'player-inventory';
 //END PLUGIN AUTHORS NOTE
 
@@ -110,7 +110,7 @@ class Inventory {
   clear() {
     this.keys.clear();
     this.medias.clear();
-    this.capsules = {}
+    this.capsules = {};
     this.items = {};
     for (const type in itemTypes) {
       this.items[type] = {
@@ -214,6 +214,48 @@ class Inventory {
     const entry = current.count.get(key.capsule) || 0;
     current.count.set(key.capsule, entry + (key.count || 1));
     current.total += (key.count || 1);
+  }
+
+  onHand() {
+    const data = {
+      name: this.name,
+      size: 0,
+      keys: {},
+      medias: {},
+      items: {},
+    };
+
+    for (const key of this.keys.values()) {
+      const count = key.count.get(this.name);
+      if (count) {
+        data.keys[key.guid] = {
+          guid: key.guid,
+          title: key.title,
+          latLng: key.latLng,
+          address: key.address,
+          count: key.count.get(this.name),
+        };
+        data.size += count;
+      }
+    }
+
+    for (const type in itemTypes) {
+      if (type === "PORTAL_LINK_KEY") continue;
+      const item = this.items[type];
+      for (const k in item.counts) {
+        const count = item.counts[k][this.name];
+        if (count) {
+          if (!data.items[type])
+            data.items[type] = {
+              leveled: levelItemTypes.includes(type),
+              count:{}
+            };
+          data.items[type].count[k] = count;
+          data.size += count;
+        }
+      }
+    }
+    return data;
   }
 }
 
@@ -478,13 +520,14 @@ function getPortalLink(key) {
   a.title = key.address;
   a.href = window.makePermalink(key.latLng);
   L.DomEvent.on(a, 'click', function(event) {
+      window.renderPortalDetails(key.guid);
       window.selectPortalByLatLng(key.latLng);
       event.preventDefault();
       return false;
   })
   L.DomEvent.on(a, 'dblclick', function(event) {
-      map.setView(key.latLng, DEFAULT_ZOOM);
-      window.selectPortalByLatLng(key.latLng);
+      window.renderPortalDetails(key.guid);
+      window.zoomToAndShowPortal(key.guid, key.latLng);
       event.preventDefault();
       return false;
   });
@@ -817,6 +860,10 @@ function buildInventoryHTML(inventory) {
     const medias = L.DomUtil.create("div", "medias", container);
     medias.appendChild(createMediaTable(inventory));
   }
+
+  const onHand = inventory.onHand();
+  L.DomUtil.create("b", null, container).textContent = `On Hand (${onHand.size})`;
+  L.DomUtil.create("div", "capsule", container).appendChild(createCapsuleTable(inventory, onHand));
 
   const capsulesName = Object.keys(inventory.capsules).sort();
   const keyLockers = capsulesName.filter((name) => inventory.capsules[name].type === "KEY_CAPSULE");
