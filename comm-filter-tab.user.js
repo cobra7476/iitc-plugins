@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: COMM Filter Tab
 // @category       COMM
-// @version        0.4.3
+// @version        0.4.4
 // @description    Show virus in the regular Comm and add a new tab with portal/player name filter and event type filter.
 // @id             comm-filter-tab
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-07-23-111417';
+plugin_info.dateTimeVersion = '2021-07-23-162843';
 plugin_info.pluginId = 'comm-filter-tab';
 //END PLUGIN AUTHORS NOTE
 
@@ -540,6 +540,7 @@ function computeHidden() {
   return filtered;
 }
 
+// for *ALL* and filter
 function updateCSS () {
   let elm = document.getElementById('comm-filter-css');
   if (!elm) {
@@ -552,11 +553,13 @@ function updateCSS () {
 
   const ada = [];
   const jarvis = [];
+  let hidden = [];
   for (const [guid, prop] of commFilter.viruses) {
     if (prop.type === 'jarvis')
       jarvis.push(guid);
     else
       ada.push(guid);
+    hidden = hidden.concat(prop.guids);
   }
 
   const highlights = [];
@@ -573,6 +576,10 @@ function updateCSS () {
   if (jarvis.length > 0) {
     content += jarvis.map((guid) => '#chat tr[data-guid="' + guid + '"] td:nth-child(3):before').join(',\n')
       + '{ content: "[ADA]"; color: #f88; background-color: #500; margin-right: .5rem; }\n';
+  }
+  if (hidden.length > 0) {
+    content += hidden.map((guid) => '#chat tr[data-guid="' + guid + '"]').join(',\n')
+      + '{ display: none }\n';
   }
   if (highlights.length > 0) {
     content += highlights.map((guid) => '#chat tr[data-guid="' + guid + '"]').join(',\n')
