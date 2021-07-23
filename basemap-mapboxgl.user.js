@@ -1,13 +1,13 @@
 // ==UserScript==
 // @author         jaiperdu
-// @name           IITC plugin: Wasabee: Offle tweak
-// @category       Misc
-// @version        0.1.0
-// @description    Interface with offle to propagate click to portal entity
-// @id             wasabee-offle
+// @name           IITC plugin: Mapbox Vector tiles
+// @category       Map Tiles
+// @version        0.1.1
+// @description    Add the Mapbox GL vector tiles as base layers.
+// @id             basemap-mapboxgl
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/wasabee-offle.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/wasabee-offle.user.js
+// @updateURL      https://le-jeu.github.io/iitc-plugins/basemap-mapboxgl.user.js
+// @downloadURL    https://le-jeu.github.io/iitc-plugins/basemap-mapboxgl.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -20,37 +20,41 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
 plugin_info.dateTimeVersion = '2021-07-23-202554';
-plugin_info.pluginId = 'wasabee-offle';
+plugin_info.pluginId = 'basemap-mapboxgl';
 //END PLUGIN AUTHORS NOTE
 
-var hookOn;
-function onPortalSelected(data) {
-  var guid = data.selectedPortalGuid;
-  if (guid && guid === hookOn) {
-    hookOn = null;
-    window.portals[guid].fire('click');
+var mapTileMapbox = {};
+window.plugin.mapTileMapbox = mapTileMapbox;
+
+mapTileMapbox.token = 'your_token';
+
+mapTileMapbox.styles = {
+  'mapbox://styles/mapbox/streets-v11' : 'Street',
+  'mapbox://styles/mapbox/outdoors-v11' : 'Outdoors',
+  'mapbox://styles/mapbox/light-v10' : 'Light',
+  'mapbox://styles/mapbox/dark-v10' : 'Dark',
+  'mapbox://styles/mapbox/bright-v8' : 'Bright'
+};
+
+mapTileMapbox.layers = [];
+
+function setup () {
+  if (!window.plugin.mapLibreGL) {
+    alert("Basemap MapBox needs Maplibre GL JS to run.");
+    throw "Missing Maplibre GL JS";
   }
-}
-
-function onOfflePortalClick() {
-	var guid = this.options.guid;
-	if (guid in window.portals) window.portals[guid].fire('click');
-	else hookOn = guid;
-}
-
-function setup() {
-	if (!window.plugin.offle) return;
-	var offle = window.plugin.offle;
-	var origRenderPortal = offle.renderPortal;
-	offle.renderPortal = function(guid) {
-		var ret = origRenderPortal(guid);
-		var marker = offle.currentPortalMarkers[guid];
-		marker.options.guid = guid;
-		marker.on('click', onOfflePortalClick);
-		return ret;
-	};
-  window.addHook("portalSelected", onPortalSelected);
-}
+  window.plugin.mapLibreGL.load().then(() => {
+    for(var style in mapTileMapbox.styles) {
+      let name = mapTileMapbox.styles[style];
+      let layer = L.maplibreGL({
+        accessToken: mapTileMapbox.token,
+        style: style
+      });
+      mapTileMapbox.layers.push(layer);
+      layerChooser.addBaseLayer(layer, 'Mapbox ' + name);
+    }
+  });
+};
 
 setup.info = plugin_info; //add the script info data to the function as a property
 if(!window.bootPlugins) window.bootPlugins = [];
