@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Wasabee Key Sync
 // @category       Misc
-// @version        0.1.2
+// @version        0.1.3
 // @description    Sync keys from CORE with Wasabee OP/D
 // @id             wkeys
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-08-03-211259';
+plugin_info.dateTimeVersion = '2021-08-04-095017';
 plugin_info.pluginId = 'wkeys';
 //END PLUGIN AUTHORS NOTE
 
@@ -47,17 +47,9 @@ function pushKey(server, opID, portalID, onhand, capsule) {
   });
 }
 
-function pushDKey(server, portalID, count, capsule, name, lat, lng) {
-  const dk = {
-    PortalID: portalID,
-    Count: count,
-    CapID: capsule,
-    Name: name,
-    Lat: lat,
-    Lng: lng,
-  };
-  const j = JSON.stringify(dk);
-  return fetch(`${server}/api/v1/d`, {
+function pushDKeys(server, dks) {
+  const j = JSON.stringify(dks);
+  return fetch(`${server}/api/v1/d/bulk`, {
     method: "POST",
     mode: "cors",
     cache: "default",
@@ -412,16 +404,16 @@ function syncDKeys() {
       map[k.guid].total += k.count;
     }
   }
-  Promise.all(
-    Object.keys(map).map((guid) => pushDKey(
-      op.server,
-      guid,
-      map[guid].total,
-      map[guid].capsule,
-      map[guid].title,
-      map[guid].latLng[0].toFixed(6),
-      map[guid].latLng[1].toFixed(6)
-    ))
+  pushDKeys(
+    op.server,
+    Object.values(map).map((k) => ({
+      PortalID: k.guid,
+      Count: k.total,
+      CapID: k.capsule,
+      Name: k.title,
+      Lat: k.latLng[0].toFixed(6),
+      Lng: k.latLng[1].toFixed(6),
+    }))
   ).then(() => window.map.fire("wasabee:defensivekeys"));
 }
 
