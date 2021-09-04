@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-09-04-161948';
+plugin_info.dateTimeVersion = '2021-09-04-162612';
 plugin_info.pluginId = 'portal-extends-circlemarker';
 //END PLUGIN AUTHORS NOTE
 
@@ -149,7 +149,6 @@ function setup() {
 
 	var oldProto = window.MapDataRequest.prototype;
 	window.MapDataRequest = function() {
-		console.log("map_data_request constructor");
 		this.cache = new DataCache();
 		this.render = new Render();
 		this.debugTiles = new RenderDebugTiles();
