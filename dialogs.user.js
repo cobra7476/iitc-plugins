@@ -19,20 +19,20 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-09-30-125540';
+plugin_info.dateTimeVersion = '2021-09-30-141411';
 plugin_info.pluginId = 'dialogs';
 //END PLUGIN AUTHORS NOTE
 
 function itemOnClick(ev) {
   var id = ev.target.closest('tr').dataset.id;
   var dialog = $(window.DIALOGS[id]);
-  dialog.dialog('moveToTop');;
+  dialog.dialog('moveToTop');
 }
 
 function itemOnClose(ev) {
   var id = ev.target.closest('tr').dataset.id;
   var dialog = $(window.DIALOGS[id]);
-  dialog.dialog('close');;
+  dialog.dialog('close');
 }
 
 function dialogListItem(id) {
@@ -44,7 +44,8 @@ function dialogListItem(id) {
   var title = document.createElement('td');
   tr.appendChild(title);
   title.textContent = text;
-  title.classList.add('ui-dialog-title-inactive');
+  if (!dialog.is(':hidden'))
+    title.classList.add('ui-dialog-title-inactive');
   title.addEventListener('click', itemOnClick);
   var closeButton = document.createElement('td');
   tr.appendChild(closeButton);
