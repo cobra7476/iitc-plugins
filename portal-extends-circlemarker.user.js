@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-07-183831';
+plugin_info.dateTimeVersion = '2021-10-10-123904';
 plugin_info.pluginId = 'portal-extends-circlemarker';
 //END PLUGIN AUTHORS NOTE
 
@@ -144,6 +144,28 @@ function setup() {
 
 		return marker;
 	}
+
+	const createLinkEntity = window.Render.prototype.createLinkEntity;
+	window.Render.prototype.createLinkEntity = function(ent,faked) {
+		createLinkEntity.call(this, ent, faked);
+
+		if (!(ent[0] in window.links)) return;
+
+		var data = {
+			timestamp: ent[1],
+			team: ent[2][1],
+			oGuid: ent[2][2],
+			oLatE6: ent[2][3],
+			oLngE6: ent[2][4],
+			dGuid: ent[2][5],
+			dLatE6: ent[2][6],
+			dLngE6: ent[2][7]
+		};
+
+		this.createPlaceholderPortalEntity(data.oGuid, data.oLatE6, data.oLngE6, data.team, data.timestamp);
+		this.createPlaceholderPortalEntity(data.dGuid, data.dLatE6, data.dLngE6, data.team, data.timestamp);
+	};
+
 
 	/* map_data_request.js */
 
@@ -469,7 +491,7 @@ function setup() {
 				} else if (this._details.timestamp == details.timestamp) {
 					var localThis = this;
 					["level", "health", "resCount", "image", "title", "ornaments", "mission", "mission50plus", "artifactBrief", "mods", "resonators", "owner", "artifactDetail"].forEach(function(prop) {
-						if (details[prop]) localThis._details[prop] = details[prop];
+						if (details[prop] !== undefined) localThis._details[prop] = details[prop];
 					});
 					if (details.history) {
 						if (!this._details.history) this._details.history = details.history;
