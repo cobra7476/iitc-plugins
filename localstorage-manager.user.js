@@ -2,7 +2,7 @@
 // @author         Zaso
 // @name           IITC plugin: LocalStorage Manager
 // @category       Debug
-// @version        0.1.1
+// @version        0.1.2
 // @description    Manage LocalStorage: import, export and delete.
 // @id             localstorage-manager
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,12 +19,13 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-14-125420';
+plugin_info.dateTimeVersion = '2021-10-14-125638';
 plugin_info.pluginId = 'localstorage-manager';
 //END PLUGIN AUTHORS NOTE
 
 // PlUGIN START ////////////////////////////////////////////////////////
 // History
+// 0.1.2 Show/sort by entry size
 // 0.1.1 Headers changed. Ready for IITC-CE
 // 0.1.0 Original sript
 
