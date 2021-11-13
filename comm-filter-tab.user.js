@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: COMM Filter Tab
 // @category       COMM
-// @version        0.4.4
+// @version        0.4.5
 // @description    Show virus in the regular Comm and add a new tab with portal/player name filter and event type filter.
 // @id             comm-filter-tab
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-14-125638';
+plugin_info.dateTimeVersion = '2021-11-13-085554';
 plugin_info.pluginId = 'comm-filter-tab';
 //END PLUGIN AUTHORS NOTE
 
@@ -314,6 +314,8 @@ commFilter.rules = [
   { type: 'field', plain: 'PLAYER| created a Control Field @|PORTAL| +|NUMBER| MUs' },
   { type: 'beacon', plain: 'PLAYER| deployed a Beacon on |PORTAL' },
   { type: 'battle', plain: 'PLAYER| deployed a Battle Beacon on |PORTAL' },
+  { type: 'battle', plain: 'PLAYER| deployed a Rare Battle Beacon on |PORTAL' },
+  { type: 'battle', plain: 'PLAYER| deployed a Very Rare Battle Beacon on |PORTAL' },
   { type: 'fracker', plain: 'PLAYER| deployed a Fracker on |PORTAL' },
   { type: 'resonator', plain: 'PLAYER| deployed a Resonator on |PORTAL' },
   { type: 'destroy field', plain: 'PLAYER| destroyed a Control Field @|PORTAL| -|NUMBER| MUs' },
@@ -322,6 +324,8 @@ commFilter.rules = [
   { type: 'link', plain: 'PLAYER| linked |PORTAL| to |PORTAL' },
   { type: 'recurse', plain: 'PLAYER| Recursed' },
   { type: 'battle result', plain: 'FACTION| won a Battle Beacon on |PORTAL' },
+  { type: 'battle result', plain: 'FACTION| won a Rare Battle Beacon on |PORTAL' },
+  { type: 'battle result', plain: 'FACTION| won a Very Rare Battle Beacon on |PORTAL' },
   { type: 'destroy link', plain: 'Your Link |PORTAL| to |PORTAL| destroyed by |PLAYER' },
   { type: 'attack', plain: 'Your Portal |PORTAL| is under attack by |PLAYER' },
   { type: 'neutralize', plain: 'Your Portal |PORTAL| neutralized by |PLAYER' },

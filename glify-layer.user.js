@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-14-125638';
+plugin_info.dateTimeVersion = '2021-11-13-085554';
 plugin_info.pluginId = 'glify-layer';
 //END PLUGIN AUTHORS NOTE
 
@@ -44,7 +44,7 @@ glLayers.layer = null;
 function showCache() {
   if (window.plugin.offle) {
     var portals = Object.values(window.plugin.offle.portalDb);
-    var colors = {
+    var colorsOffle = {
       // not visited
       0: { r: 0, g: 0, b: 0, a: .2 },
       // visited not captured
@@ -60,7 +60,7 @@ function showCache() {
         pane: "cache",
         data: portals.map((p) => [p.lat, p.lng, p.guid]),
         size: 10,
-        color: (i) => colors[portals[i].flags & 3],
+        color: (i) => colorsOffle[portals[i].flags & 3],
         click: (e, feature) => {
           var guid = feature[2];
           if (guid in window.portals) {

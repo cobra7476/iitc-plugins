@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-14-125638';
+plugin_info.dateTimeVersion = '2021-11-13-085554';
 plugin_info.pluginId = 'basemap-google-custom';
 //END PLUGIN AUTHORS NOTE
 

@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-10-14-125638';
+plugin_info.dateTimeVersion = '2021-11-13-085554';
 plugin_info.pluginId = 'portal-extends-circlemarker';
 //END PLUGIN AUTHORS NOTE
 
@@ -593,6 +593,9 @@ function setup() {
 
 			var lvlWeight = LEVEL_TO_WEIGHT[level] * Math.sqrt(scale);
 			var lvlRadius = LEVEL_TO_RADIUS[level] * scale;
+
+			if (scale < 1) lvlWeight = 1;
+
 			if (this._team != TEAM_NONE && level == 0) {
 				lvlWeight = 1;
 			}
