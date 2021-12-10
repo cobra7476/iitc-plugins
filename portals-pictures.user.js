@@ -2,12 +2,12 @@
 // @author         jaiperdu
 // @name           IITC plugin: Portals pictures
 // @category       Info
-// @version        0.1.3
+// @version        0.1.3.20211210.233930
 // @description    Show portal pictures in a dialog
 // @id             portals-pictures
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/portals-pictures.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/portals-pictures.user.js
+// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/portals-pictures.user.js
+// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/portals-pictures.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -18,8 +18,8 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-11-13-085554';
+plugin_info.buildName = 'cobra7476';
+plugin_info.dateTimeVersion = '2021-12-10-233930';
 plugin_info.pluginId = 'portals-pictures';
 //END PLUGIN AUTHORS NOTE
 

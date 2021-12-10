@@ -2,12 +2,12 @@
 // @author         jaiperdu
 // @name           IITC plugin: Highlight uniques captured/visited/scanned
 // @category       Highlighter
-// @version        1.5.5
+// @version        1.5.5.20211210.233930
 // @description    Highlighter for unique visited/captured/scout controlled portals
 // @id             highlight-intel-uniques
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/highlight-intel-uniques.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/highlight-intel-uniques.user.js
+// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/highlight-intel-uniques.user.js
+// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/highlight-intel-uniques.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -18,8 +18,8 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-11-13-085554';
+plugin_info.buildName = 'cobra7476';
+plugin_info.dateTimeVersion = '2021-12-10-233930';
 plugin_info.pluginId = 'highlight-intel-uniques';
 //END PLUGIN AUTHORS NOTE
 
