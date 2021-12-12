@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Cache visible portals
 // @category       Cache
-// @version        0.4.3.20211210.233930
+// @version        0.4.3.20211212.145225
 // @description    Cache the data of visible portals and use this to populate the map when possible
 // @id             cache-portals
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-10-233930';
+plugin_info.dateTimeVersion = '2021-12-12-145225';
 plugin_info.pluginId = 'cache-portals';
 //END PLUGIN AUTHORS NOTE
 

@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: MapLibre GL JS
 // @category       Misc
-// @version        0.1.0.20211210.233930
+// @version        0.1.0.20211212.145225
 // @description    Maplibre GL JS dependency
 // @id             maplibre-gl-js
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-10-233930';
+plugin_info.dateTimeVersion = '2021-12-12-145225';
 plugin_info.pluginId = 'maplibre-gl-js';
 //END PLUGIN AUTHORS NOTE
 
