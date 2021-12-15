@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: MUs Tab
 // @category       COMM
-// @version        0.1.0.20211212.172242
+// @version        0.1.0.20211215.160822
 // @description    Add a MUs tab scoring the MU
 // @id             muTab
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-12-172242';
+plugin_info.dateTimeVersion = '2021-12-15-160822';
 plugin_info.pluginId = 'muTab';
 //END PLUGIN AUTHORS NOTE
 

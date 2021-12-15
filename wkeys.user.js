@@ -2,12 +2,12 @@
 // @author         jaiperdu
 // @name           IITC plugin: Wasabee Key Sync
 // @category       Misc
-// @version        0.2.0.20211214.215528
+// @version        0.1.4.20211215.160822
 // @description    Sync keys from CORE with Wasabee OP/D
 // @id             wkeys
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/wkeys.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/wkeys.user.js
+// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
+// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -18,8 +18,8 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2021-12-14-215528';
+plugin_info.buildName = 'cobra7476';
+plugin_info.dateTimeVersion = '2021-12-15-160822';
 plugin_info.pluginId = 'wkeys';
 //END PLUGIN AUTHORS NOTE
 
@@ -45,17 +45,6 @@ function pushKey(server, opID, portalID, onhand, capsule) {
     referrerPolicy: "origin",
     body: fd,
   });
-}
-
-function removeAllKeys() {
-  const op = getSelectedOp();
-  const gid = JSON.parse(localStorage["wasabee-me"]).GoogleID;
-
-  op.keysonhand
-      .filter((k) => k.gid === gid && op._idToOpportals.has(k.portalId))
-      .forEach((k) =>
-          pushKey(op.server, op.ID, k.portalId, 0, "")
-            .then(() => op.keyOnHand(k.portalId, gid, 0, "")))
 }
 
 function pushDKeys(server, dks) {
@@ -460,7 +449,6 @@ function displayKeys() {
         table.setItems(wkeys.keys);
       },
       "Sync to OP Keys": syncOpKeys,
-      "Remove all from OP": removeAllKeys,
       "Sync to D-Keys": syncDKeys,
     }
   });
