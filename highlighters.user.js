@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Highlighters selection
 // @category       Highlighter
-// @version        0.2.0.20211215.160822
+// @version        0.2.0.20211225.122737
 // @description    Allow multiple highlighter to work concurrently
 // @id             highlighters
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-15-160822';
+plugin_info.dateTimeVersion = '2021-12-25-122737';
 plugin_info.pluginId = 'highlighters';
 //END PLUGIN AUTHORS NOTE
 

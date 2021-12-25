@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Wasabee Key Sync
 // @category       Misc
-// @version        0.1.4.20211215.160822
+// @version        0.2.0.20211225.122737
 // @description    Sync keys from CORE with Wasabee OP/D
 // @id             wkeys
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-15-160822';
+plugin_info.dateTimeVersion = '2021-12-25-122737';
 plugin_info.pluginId = 'wkeys';
 //END PLUGIN AUTHORS NOTE
 
@@ -45,6 +45,17 @@ function pushKey(server, opID, portalID, onhand, capsule) {
     referrerPolicy: "origin",
     body: fd,
   });
+}
+
+function removeAllKeys() {
+  const op = getSelectedOp();
+  const gid = JSON.parse(localStorage["wasabee-me"]).GoogleID;
+
+  op.keysonhand
+      .filter((k) => k.gid === gid && op._idToOpportals.has(k.portalId))
+      .forEach((k) =>
+          pushKey(op.server, op.ID, k.portalId, 0, "")
+            .then(() => op.keyOnHand(k.portalId, gid, 0, "")))
 }
 
 function pushDKeys(server, dks) {
@@ -449,6 +460,7 @@ function displayKeys() {
         table.setItems(wkeys.keys);
       },
       "Sync to OP Keys": syncOpKeys,
+      "Remove all from OP": removeAllKeys,
       "Sync to D-Keys": syncDKeys,
     }
   });

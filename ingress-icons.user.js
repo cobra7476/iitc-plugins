@@ -2,7 +2,7 @@
 // @author         jaiperdu
 // @name           IITC plugin: Ingress Icons
 // @category       Appearance
-// @version        0.1.1.20211215.160822
+// @version        0.1.1.20211225.122737
 // @description    Bring ameba64/ingress-items icons into IITC
 // @id             ingress-icons
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-15-160822';
+plugin_info.dateTimeVersion = '2021-12-25-122737';
 plugin_info.pluginId = 'ingress-icons';
 //END PLUGIN AUTHORS NOTE
 
