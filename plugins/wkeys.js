@@ -34,6 +34,18 @@ function pushKey(server, opID, portalID, onhand, capsule) {
   });
 }
 
+function removeAllKeys() {
+  const op = getSelectedOp();
+  const me = JSON.parse(localStorage["wasabee-me"]);
+  const gid = me.GoogleID || me.id; // .id for >0.21
+
+  op.keysonhand
+      .filter((k) => k.gid === gid && op._idToOpportals.has(k.portalId))
+      .forEach((k) =>
+          pushKey(op.server, op.ID, k.portalId, 0, "")
+            .then(() => op.keyOnHand(k.portalId, gid, 0, "")))
+}
+
 function pushDKeys(server, dks) {
   const j = JSON.stringify(dks);
   return fetch(`${server}/api/v1/d/bulk`, {
@@ -439,6 +451,7 @@ function displayKeys() {
         table.setItems(wkeys.keys);
       },
       "Sync to OP Keys": syncOpKeys,
+      "Remove all from OP": removeAllKeys,
       "Sync to D-Keys": syncDKeys,
     },
   });
