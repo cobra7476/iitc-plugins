@@ -9,6 +9,7 @@ from functools import partial
 from importlib import import_module
 from mimetypes import guess_type
 from pathlib import Path
+from glob import glob
 
 import settings
 
@@ -41,13 +42,18 @@ def fill_meta(source, plugin_name, dist_path):
             if text == '==UserScript==':
                 raise UserWarning(f'{plugin_name}: wrong metablock detected')
         else:
-            key = key[1:]
+            if key[0] == '@':
+                key = key[1:]
+            else:  # continue previous line
+                meta[-1] += ' ' + text
+                continue
+
             keys.add(key)
             if key == 'version':
-                if not re.match(r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$', value):
+                if not re.match(r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-\w{1,10})?$', value):
                     print(f'{plugin_name}: wrong version format: {value}')  # expected: major.minor.patch
                 elif settings.version_timestamp:  # append timestamp only for well-formed version
-                    line = line.replace(value, '{ver}.{.build_timestamp}'.format(settings, ver=value))
+                    line = line.replace(value, '{ver}-{.build_timestamp}'.format(settings, ver=value))
             elif key == 'name':
                 if value == 'IITC: Ingress intel map total conversion':
                     is_main = True
@@ -164,14 +170,6 @@ def process_file(source, out_dir, dist_path=None, deps_list=None):
     meta, is_main = fill_meta(meta, plugin_name, dist_path)
     settings.plugin_id = plugin_name
 
-    if not settings.version_timestamp and settings.ignore_semver:
-        try:
-            old_meta, _ = (out_dir / (plugin_name + '.user.js')).read_text().split('\n\n', 1)
-            if old_meta + '\n' == meta:
-                return False
-        except:
-            pass
-
     path = source.parent  # used as root for all (relative) paths
     script = re.sub(r"'@bundle_code@';", partial(bundle_code, path=path), script)
     try:
@@ -195,15 +193,13 @@ def process_file(source, out_dir, dist_path=None, deps_list=None):
     if settings.url_dist_base and settings.update_file == '.meta.js':
         (out_dir / (plugin_name + '.meta.js')).write_text(meta, encoding='utf8')
 
-    return True
-
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('build', type=str, nargs='?',
                         help='Specify build name')
-    parser.add_argument('sources', type=Path, nargs='+',
+    parser.add_argument('sources', type=str, nargs='+',
                         help='Specify source file name')
     parser.add_argument('--out-dir', type=Path, nargs='?',
                         help='Specify out directory')
@@ -218,7 +214,8 @@ if __name__ == '__main__':
     if not args.out_dir.is_dir():
         parser.error('Out directory not found: {.out_dir}'.format(args))
 
-    for source in args.sources:
+    sources = [Path(f) for files in args.sources for f in glob(files)]
+    for source in sources:
         if not source.is_file():
             parser.error('Source file not found: {}'.format(source))
 
@@ -226,9 +223,7 @@ if __name__ == '__main__':
         if target.is_file() and target.samefile(source):
             parser.error('Target cannot be same as source: {}'.format(source))
         try:
-            if process_file(source, args.out_dir):
-                print('new/changed:', target)
-            else:
-                print('unchanged:  ', target)
+            process_file(source, args.out_dir)
         except UserWarning as err:
             parser.error(err)
+        print(target)
