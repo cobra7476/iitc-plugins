@@ -48,34 +48,22 @@ defaults = {  # common for all build targets
 builds = {  # every build entry extends common defaults
 
     # default settings
-    'local': {},
-
-    # specify localhost as base for scripts (auto)updating
-    # useful for developers
-    'dev': {
-        'url_dist_base': 'http://localhost:8000',
+    'local': {
         'update_file': '.user.js',
         'version_timestamp': True,
     },
 
-    # use no-inject wrapper for easy breakpoints (Tampermonkey only!)
-    'tmdev': {
-        'url_dist_base': 'http://localhost:8000',
-        'update_file': '.user.js',
-        'version_timestamp': True,
-        'plugin_wrapper': 'pluginwrapper_noinject',
-    },
-
-    # default entry that also builds the mobile .apk
-    # requires: Java JDK, android-sdk
-    'mobile': {
-        'post_build': ['build_mobile.py'],
-    },
-
-    'lejeu': {
-        'url_dist_base': 'https://le-jeu.github.io/iitc-plugins',
-        'update_file': '.user.js',
+    'dw235': {
+        'url_dist_base': 'https://github.com/clavelm/iitc-plugins/releases/download/release',
+        'update_file': '.meta.js',
+        'version_timestamp': False,
         'ignore_semver': True,
+    },
+
+    'dw235nightly': {
+        'url_dist_base': 'https://github.com/clavelm/iitc-plugins/releases/download/nightly',
+        'update_file': '.meta.js',
+        'version_timestamp': True,
     },
 
     # publish your own fork of the project, and host it on your own web site

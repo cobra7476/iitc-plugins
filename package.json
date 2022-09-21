@@ -1,13 +1,13 @@
 {
   "name": "iitc-plugins",
   "version": "1.0.0",
-  "author": "jaiperdu",
-  "description": "IITC plugins by jaiperdu",
+  "author": "dw235",
+  "description": "IITC plugins by dw235 (heavily inspired by github/le-jeu",
   "license": "ISC",
-  "homepage": "https://github.com/le-jeu/iitc-plugins#readme",
+  "homepage": "https://github.com/clavelm/iitc-plugins#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/le-jeu/iitc-plugins.git"
+    "url": "git+https://github.com/clavelm/iitc-plugins.git"
   },
   "keywords": [
     "iitc"
@@ -16,10 +16,12 @@
   "scripts": {
     "build": "npm run build:local",
     "build:local": "python3 build_plugin.py --out-dir dist local plugins/*.js",
-    "build:lejeu": "python3 build_plugin.py --out-dir dist lejeu plugins/*.js",
+    "build:dw235": "python3 build_plugin.py --out-dir dist dw235 plugins/*.js",
+    "build:dw235nightly": "python3 build_plugin.py --out-dir dist dw235nightly plugins/*.js",
     "rollup": "npm run rollup:local",
     "rollup:local": "rollup -c --environment BUILD:local",
-    "rollup:lejeu": "rollup -c --environment BUILD:lejeu",
+    "rollup:dw235": "rollup -c --environment BUILD:dw235",
+    "rollup:dw235nightly": "rollup -c --environment BUILD:dw235nightly",
     "lint": "npm run lint:check",
     "lint:check": "eslint plugins",
     "lint:fix": "eslint plugins --fix",
@@ -28,7 +30,7 @@
     "format:fix": "prettier --write *.js *.json"
   },
   "bugs": {
-    "url": "https://github.com/le-jeu/iitc-plugins/issues"
+    "url": "https://github.com/clavelm/iitc-plugins/issues"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.18.10",

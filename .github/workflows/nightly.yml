@@ -1,0 +1,40 @@
+name: Nightly
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1.0.5
+        with:
+          tag_name: nightly
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.4.0
+
+      - name: Sync previous build
+        run: |
+          mkdir dist
+          git fetch origin dist --depth 1
+          git worktree add dist origin/dist
+
+      - name: Install deps 🔧
+        run: npm install
+
+      - name: Build 🔧
+        run: |
+          npm run build:dw235nightly
+          npm run rollup:dw235nightly
+
+      - name: PreRelease
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: nightly
+          target_commitish: dev
+          prerelease: true
+          files: dist/*.js
