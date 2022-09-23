@@ -14,7 +14,9 @@
   ],
   "private": true,
   "scripts": {
+    "clean": "rm -rf dist && mkdir dist",
     "build": "npm run build:local",
+    "buildAll" : "npm run clean && npm run build && npm run rollup",
     "build:local": "python3 build_plugin.py --out-dir dist local plugins/*.js",
     "build:dw235": "python3 build_plugin.py --out-dir dist dw235 plugins/*.js",
     "build:dw235nightly": "python3 build_plugin.py --out-dir dist dw235nightly plugins/*.js",
