@@ -1,13 +1,13 @@
 // ==UserScript==
 // @author         jaiperdu
-// @name           IITC plugin: Mapbox Vector tiles
-// @category       Map Tiles
-// @version        0.1.1
-// @description    Add the Mapbox GL vector tiles as base layers.
-// @id             basemap-mapboxgl
+// @name           IITC plugin: ISmaller/Bigger/Older Portals
+// @category       Highlighter
+// @version        1.0.0
+// @description    Resize portal and age highlighers
+// @id             highlight-portal-size-age
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/basemap-mapboxgl.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/basemap-mapboxgl.user.js
+// @updateURL      https://le-jeu.github.io/iitc-plugins/highlight-portal-size-age.user.js
+// @downloadURL    https://le-jeu.github.io/iitc-plugins/highlight-portal-size-age.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -20,41 +20,35 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
 plugin_info.dateTimeVersion = '2022-09-23-223133';
-plugin_info.pluginId = 'basemap-mapboxgl';
+plugin_info.pluginId = 'highlight-portal-size-age';
 //END PLUGIN AUTHORS NOTE
 
-var mapTileMapbox = {};
-window.plugin.mapTileMapbox = mapTileMapbox;
-
-mapTileMapbox.token = 'your_token';
-
-mapTileMapbox.styles = {
-  'mapbox://styles/mapbox/streets-v11' : 'Street',
-  'mapbox://styles/mapbox/outdoors-v11' : 'Outdoors',
-  'mapbox://styles/mapbox/light-v10' : 'Light',
-  'mapbox://styles/mapbox/dark-v10' : 'Dark',
-  'mapbox://styles/mapbox/bright-v8' : 'Bright'
-};
-
-mapTileMapbox.layers = [];
-
-function setup () {
-  if (!window.plugin.mapLibreGL) {
-    alert("Basemap MapBox needs Maplibre GL JS to run.");
-    throw "Missing Maplibre GL JS";
-  }
-  window.plugin.mapLibreGL.load().then(() => {
-    for(var style in mapTileMapbox.styles) {
-      let name = mapTileMapbox.styles[style];
-      let layer = L.maplibreGL({
-        accessToken: mapTileMapbox.token,
-        style: style
-      });
-      mapTileMapbox.layers.push(layer);
-      layerChooser.addBaseLayer(layer, 'Mapbox ' + name);
-    }
+/* exported setup */
+function setup() {
+  window.addPortalHighlighter('Smaller Portals', function (data) {
+    const portal = data.portal;
+    portal.setStyle({
+      weight: portal.options.weight * 0.7,
+      radius: portal.options.radius * 0.8,
+    });
   });
-};
+  window.addPortalHighlighter('Bigger Portals', function (data) {
+    const portal = data.portal;
+    portal.setStyle({
+      weight: portal.options.weight * 1.2,
+      radius: portal.options.radius * 1.5,
+    });
+  });
+  window.addPortalHighlighter('Old Portals', function (data) {
+    const portal = data.portal;
+    const delta = (Date.now() - portal.options.timestamp) / 86400000;
+    const color = delta > 1 ? 'grey' : 'hsl(' + Math.round(delta * 300) + ',100%,50%)';
+    portal.setStyle({
+      color: color,
+      fillColor: color,
+    });
+  });
+}
 
 setup.info = plugin_info; //add the script info data to the function as a property
 if(!window.bootPlugins) window.bootPlugins = [];

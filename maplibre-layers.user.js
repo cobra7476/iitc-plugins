@@ -2,12 +2,12 @@
 // @author         jaiperdu
 // @name           IITC plugin: MapLibre GL Layers
 // @category       Map Tiles
-// @version        0.2.0.20211225.122737
+// @version        0.2.1
 // @description    GL layers
 // @id             maplibre-layers
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/maplibre-layers.user.js
-// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/maplibre-layers.user.js
+// @updateURL      https://le-jeu.github.io/iitc-plugins/maplibre-layers.user.js
+// @downloadURL    https://le-jeu.github.io/iitc-plugins/maplibre-layers.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -18,13 +18,13 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-25-122737';
+plugin_info.buildName = 'lejeu';
+plugin_info.dateTimeVersion = '2022-09-23-223133';
 plugin_info.pluginId = 'maplibre-layers';
 //END PLUGIN AUTHORS NOTE
 
 function guidToID(guid) {
-  return parseInt(guid.slice(0,8),16);
+  return parseInt(guid.slice(0, 8), 16);
 }
 
 function mapInit() {
@@ -38,17 +38,17 @@ function mapInit() {
     version: 8,
     name: "GL layers",
     sources: {
-      "fields": {
+      fields: {
         type: "geojson",
-        data: { "type": "FeatureCollection", "features": [] },
+        data: { type: "FeatureCollection", features: [] },
       },
-      "links": {
+      links: {
         type: "geojson",
-        data: { "type": "FeatureCollection", "features": [] },
+        data: { type: "FeatureCollection", features: [] },
       },
-      "portals": {
+      portals: {
         type: "geojson",
-        data: { "type": "FeatureCollection", "features": [] },
+        data: { type: "FeatureCollection", features: [] },
       },
     },
     layers: [
@@ -58,15 +58,17 @@ function mapInit() {
         type: "fill",
         paint: {
           "fill-color": [
-            'match',
-            ['get', 'team'],
-            'R', COLORS[1],
-            'E', COLORS[2],
-            COLORS[0]
+            "match",
+            ["get", "team"],
+            "R",
+            COLORS[1],
+            "E",
+            COLORS[2],
+            COLORS[0],
           ],
-          "fill-opacity": .4,
+          "fill-opacity": 0.4,
           "fill-antialias": false,
-        }
+        },
       },
       {
         id: "links",
@@ -75,13 +77,15 @@ function mapInit() {
         paint: {
           "line-width": 2,
           "line-color": [
-            'match',
-            ['get', 'team'],
-            'R', COLORS[1],
-            'E', COLORS[2],
-            COLORS[0]
+            "match",
+            ["get", "team"],
+            "R",
+            COLORS[1],
+            "E",
+            COLORS[2],
+            COLORS[0],
           ],
-        }
+        },
       },
       {
         id: "portals",
@@ -89,58 +93,70 @@ function mapInit() {
         type: "circle",
         paint: {
           "circle-color": [
-            'case',
-            ['boolean', ['feature-state', 'selected'], false],
+            "case",
+            ["boolean", ["feature-state", "selected"], false],
             COLOR_SELECTED_PORTAL,
-            ['match',
-              ['get', 'team'],
-              'R', COLORS[1],
-              'E', COLORS[2],
-              COLORS[0]
-            ]
-          ],
-          "circle-stroke-color":  [
-            'case',
-            ['boolean', ['feature-state', 'selected'], false],
-            COLOR_SELECTED_PORTAL,
-            ['match',
-              ['get', 'team'],
-              'R', COLORS[1],
-              'E', COLORS[2],
-              COLORS[0]
-            ]
-          ],
-          'circle-stroke-width': [
-            'interpolate' , ["linear"], ["get", "level"],
-            0, 2,
-            8, 3,
-          ],
-          "circle-opacity": .5,
-          'circle-radius': [
-            'let', 'radius', [
-              'interpolate' , ["linear"], ["get", "level"],
-              0, 5,
-              8, 8,
+            [
+              "match",
+              ["get", "team"],
+              "R",
+              COLORS[1],
+              "E",
+              COLORS[2],
+              COLORS[0],
             ],
-            ['interpolate',
-              ["linear"], ["zoom"],
-              7, ['*', .5, ['var', 'radius']],
-              16, ['*', 1, ['var', 'radius']],
-            ]
           ],
-        }
+          "circle-stroke-color": [
+            "case",
+            ["boolean", ["feature-state", "selected"], false],
+            COLOR_SELECTED_PORTAL,
+            [
+              "match",
+              ["get", "team"],
+              "R",
+              COLORS[1],
+              "E",
+              COLORS[2],
+              COLORS[0],
+            ],
+          ],
+          "circle-stroke-width": [
+            "interpolate",
+            ["linear"],
+            ["get", "level"],
+            0,
+            2,
+            8,
+            3,
+          ],
+          "circle-opacity": 0.5,
+          "circle-radius": [
+            "let",
+            "radius",
+            ["interpolate", ["linear"], ["get", "level"], 0, 5, 8, 8],
+            [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              7,
+              ["*", 0.5, ["var", "radius"]],
+              16,
+              ["*", 1, ["var", "radius"]],
+            ],
+          ],
+        },
       },
-    ]
+    ],
   };
 
   var layer = L.maplibreGL({
-    pane: 'overlayPane',
+    pane: "overlayPane",
     interactive: true,
-    style: ingressStyle
+    style: ingressStyle,
   });
 
   function onMapDataRefreshEnd() {
-    for (var name of ['fields', 'links', 'portals']) {
+    for (var name of ["fields", "links", "portals"]) {
       refreshSource(name);
     }
   }
@@ -160,7 +176,10 @@ function mapInit() {
       geojson.properties.level = entity.options.data.level;
       sources[name].set(guid, geojson);
     }
-    source.setData({ "type": "FeatureCollection", "features": Array.from(sources[name].values()) });
+    source.setData({
+      type: "FeatureCollection",
+      features: Array.from(sources[name].values()),
+    });
   }
 
   function onPortalSelected(d) {
@@ -168,31 +187,45 @@ function mapInit() {
     var next = d.selectedPortalGuid;
     var map = layer.getMaplibreMap();
     if (!map) return;
-    if (prev) map.setFeatureState({ id: guidToID(prev), source: 'portals' }, { selected: false });
-    if (next) map.setFeatureState({ id: guidToID(next), source: 'portals' }, { selected: true });
+    if (prev)
+      map.setFeatureState(
+        { id: guidToID(prev), source: "portals" },
+        { selected: false }
+      );
+    if (next)
+      map.setFeatureState(
+        { id: guidToID(next), source: "portals" },
+        { selected: true }
+      );
   }
 
-  function onPortalClick (e) {
-    console.log('click');
+  function onPortalClick(e) {
     var portal = e.features[0];
-    window.renderPortalDetails(portal.properties.guid);
+    var guid = portal.properties.guid;
+    window.renderPortalDetails(guid);
+    // propagate click event
+    if (guid in window.portals) {
+      window.portals[guid].fire("click");
+    }
   }
 
   var step = 0;
   let dashArraySeq = [
-      [0, 4, 3],
-      [1, 4, 2],
-      [2, 4, 1],
-      [3, 4, 0],
-      [0, 1, 3, 3],
-      [0, 2, 3, 2],
-      [0, 3, 3, 1]
+    [0, 4, 3],
+    [1, 4, 2],
+    [2, 4, 1],
+    [3, 4, 0],
+    [0, 1, 3, 3],
+    [0, 2, 3, 2],
+    [0, 3, 3, 1],
   ];
   var animation;
   function lineAnimate() {
     step = (step + 1) % dashArraySeq.length;
     if (!layer.getMaplibreMap()) return;
-    layer.getMaplibreMap().setPaintProperty("links", 'line-dasharray', dashArraySeq[step]);
+    layer
+      .getMaplibreMap()
+      .setPaintProperty("links", "line-dasharray", dashArraySeq[step]);
     setTimeout(() => {
       animation = requestAnimationFrame(lineAnimate);
     }, 50);
@@ -200,7 +233,7 @@ function mapInit() {
 
   function onLayerInit(e) {
     if (e.layer === layer) {
-      window.map.off('layeradd', onLayerInit);
+      window.map.off("layeradd", onLayerInit);
       var map = layer.getMaplibreMap();
       map.scrollZoom.disable();
       layer.getContainer().style.zIndex = 101;
@@ -210,13 +243,13 @@ function mapInit() {
   function onLayerAdd(e) {
     if (e.layer !== layer) return;
     var map = layer.getMaplibreMap();
-    map.off('click mouseenter mouseleave');
-    map.on('click', 'portals', onPortalClick);
+    map.off("click mouseenter mouseleave");
+    map.on("click", "portals", onPortalClick);
     layer.getCanvas().style.cursor = "default";
-    map.on('mouseenter', 'portals', () => {
+    map.on("mouseenter", "portals", () => {
       layer.getCanvas().style.cursor = "pointer";
     });
-    map.on('mouseleave', 'portals', () => {
+    map.on("mouseleave", "portals", () => {
       layer.getCanvas().style.cursor = "default";
     });
     onMapDataRefreshEnd();
@@ -228,9 +261,9 @@ function mapInit() {
   }
 
   var oldprocessGameEntities = window.Render.prototype.processGameEntities;
-  window.Render.prototype.processGameEntities = function(entities, details) {
+  window.Render.prototype.processGameEntities = function (entities, details) {
     oldprocessGameEntities.call(this, entities, details);
-    for (var name of ['fields', 'links', 'portals']) {
+    for (var name of ["fields", "links", "portals"]) {
       var data = [];
       for (var ent of entities) {
         var guid = ent[0];
@@ -246,18 +279,21 @@ function mapInit() {
       }
       if (!layer.getMaplibreMap()) continue;
       var source = layer.getMaplibreMap().getSource(name);
-      source.setData({ "type": "FeatureCollection", "features": Array.from(sources[name].values()) });
+      source.setData({
+        type: "FeatureCollection",
+        features: Array.from(sources[name].values()),
+      });
     }
-  }
-  window.map.on('layeradd', onLayerInit);
-  window.map.on('layeradd', onLayerAdd);
-  window.map.on('layerremove', onLayerRemove);
+  };
+  window.map.on("layeradd", onLayerInit);
+  window.map.on("layeradd", onLayerAdd);
+  window.map.on("layerremove", onLayerRemove);
 
   //window.overlayStatus['GL Layers'] = false;
-  window.addLayerGroup('GL Layers', layer, false);
-  window.addHook('mapDataRefreshEnd', onMapDataRefreshEnd);
-  window.addHook('portalDetailsUpdated', () => refreshSource('portals'));
-  window.addHook('portalSelected', onPortalSelected);
+  window.addLayerGroup("GL Layers", layer, false);
+  window.addHook("mapDataRefreshEnd", onMapDataRefreshEnd);
+  window.addHook("portalDetailsUpdated", () => refreshSource("portals"));
+  window.addHook("portalSelected", onPortalSelected);
 
   window.plugin.mapLibreLayers.layer = layer;
 }

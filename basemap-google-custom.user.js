@@ -2,12 +2,12 @@
 // @author         jaiperdu
 // @name           IITC plugin: Custom Google map
 // @category       Map Tiles
-// @version        0.1.2.20211225.122737
+// @version        0.1.2
 // @description    Add a customizable Version of Google map tiles as a base layer.
 // @id             basemap-google-custom
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/basemap-google-custom.user.js
-// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/basemap-google-custom.user.js
+// @updateURL      https://le-jeu.github.io/iitc-plugins/basemap-google-custom.user.js
+// @downloadURL    https://le-jeu.github.io/iitc-plugins/basemap-google-custom.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -18,8 +18,8 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
-plugin_info.buildName = 'cobra7476';
-plugin_info.dateTimeVersion = '2021-12-25-122737';
+plugin_info.buildName = 'lejeu';
+plugin_info.dateTimeVersion = '2022-09-23-223133';
 plugin_info.pluginId = 'basemap-google-custom';
 //END PLUGIN AUTHORS NOTE
 
