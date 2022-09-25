@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2022-09-23-223133';
+plugin_info.dateTimeVersion = '2022-09-25-142543';
 plugin_info.pluginId = 'd3-sphere';
 //END PLUGIN AUTHORS NOTE
 
