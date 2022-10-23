@@ -1,13 +1,13 @@
 // ==UserScript==
-// @author         jaiperdu
+// @author         jaiperdu_editedBy_cobra7476
 // @name           IITC plugin: Wasabee Key Sync
 // @category       Misc
-// @version        0.1.8
+// @version        0.1.8.202210232023
 // @description    Sync keys from CORE with Wasabee OP/D
+// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
+// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
 // @id             wkeys
 // @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
-// @updateURL      https://le-jeu.github.io/iitc-plugins/wkeys.user.js
-// @downloadURL    https://le-jeu.github.io/iitc-plugins/wkeys.user.js
 // @match          https://intel.ingress.com/*
 // @grant          none
 // ==/UserScript==
@@ -19,7 +19,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 plugin_info.buildName = 'lejeu';
-plugin_info.dateTimeVersion = '2022-09-25-142543';
+plugin_info.dateTimeVersion = '2022-10-23-182903';
 plugin_info.pluginId = 'wkeys';
 //END PLUGIN AUTHORS NOTE
 
