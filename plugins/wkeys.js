@@ -1,8 +1,10 @@
-// @author         jaiperdu
+// @author         jaiperdu_editedBy_cobra7476
 // @name           Wasabee Key Sync
 // @category       Misc
-// @version        0.1.8
+// @version        0.1.8.202210232023
 // @description    Sync keys from CORE with Wasabee OP/D
+// @updateURL      https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
+// @downloadURL    https://github.com/cobra7476/iitc-plugins/raw/dist/wkeys.user.js
 
 const wkeys = {};
 
