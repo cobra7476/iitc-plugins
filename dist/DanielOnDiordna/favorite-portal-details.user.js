@@ -1,11 +1,11 @@
 // ==UserScript==
-// @author         DanielOnDiordna
-// @name           Favorite portal details
+// @author         DanielOnDiordna (Modded by cobra7476)
+// @name           Favorite portal details - Export/Import
 // @category       Info
-// @version        1.0.0.20251025.232300
-// @updateURL      https://raw.githubusercontent.com/IITC-CE/Community-plugins/master/dist/DanielOnDiordna/favorite-portal-details.meta.js
-// @downloadURL    https://raw.githubusercontent.com/IITC-CE/Community-plugins/master/dist/DanielOnDiordna/favorite-portal-details.user.js
-// @description    [danielondiordna-1.0.0.20251025.232300] Quickly show a list of details for your favorite list of portals.
+// @version        1.0.1.20260928.194100
+// @updateURL      https://raw.githubusercontent.com/cobra7476/iitc-plugins/main/dist/DanielOnDiordna/favorite-portal-details.meta.js
+// @downloadURL    https://raw.githubusercontent.com/cobra7476/iitc-plugins/main/dist/DanielOnDiordna/favorite-portal-details.user.js
+// @description    [danielondiordna-1.0.1] Quickly show a list of details for your favorite list of portals, with JSON Export/Import support.
 // @id             favorite-portal-details@DanielOnDiordna
 // @namespace      https://softspot.nl/ingress/
 // @match          https://intel.ingress.com/*
@@ -187,6 +187,49 @@ version 0.1.1.20180911.233100
         try {
             localStorage[self.storagename] = JSON.stringify(data);
         } catch(e) {
+        }
+    };
+
+    // Exporter la liste des favoris sous forme de fichier JSON téléchargeable
+    self.exportfavorites = function() {
+        var data = localStorage[self.storagename];
+        if (!data) {
+            alert('Aucun favori à exporter.');
+            return;
+        }
+        var blob = new Blob([data], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'iitc-favorite-portals-' + new Date().toISOString().slice(0, 10) + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // Importer la liste des favoris depuis du JSON collé dans une invite
+    self.importfavorites = function() {
+        var jsonString = prompt('Collez le contenu JSON de votre sauvegarde ici :');
+        if (jsonString === null || jsonString.trim() === '') return;
+        
+        try {
+            var parsed = JSON.parse(jsonString);
+            if (!Array.isArray(parsed)) {
+                throw new Error('Le format JSON doit être un tableau.');
+            }
+            
+            if (confirm('Attention : Cela va remplacer vos favoris actuels par ceux importés. Continuer ?')) {
+                localStorage[self.storagename] = JSON.stringify(parsed);
+                self.restorefavorites();
+                self.updateselector();
+                if ($('#' + self.id + 'orderlist').length > 0) {
+                    $('#' + self.id + 'orderlist').html(self.ordermenuhtml());
+                }
+                alert('Importation réussie !');
+            }
+        } catch (e) {
+            alert('Erreur : Le format JSON est invalide.\n' + e.message);
         }
     };
 
@@ -562,7 +605,11 @@ version 0.1.1.20180911.233100
         container.className = `${self.id}menu`;
         container.innerHTML = `
             <div class="${self.id}menubuttons">
-            <a name="${self.id}checkall">Check all</a> <a name="${self.id}changeorder">Edit list</a> <a name="${self.id}about">About</a>
+                <a name="${self.id}checkall">Check all</a> 
+                <a name="${self.id}changeorder">Edit list</a> 
+                <a name="${self.id}export">Exporter</a> 
+                <a name="${self.id}import">Importer</a> 
+                <a name="${self.id}about">About</a>
             <label><input type="checkbox" name="${self.id}autocheck">Check all on IITC start</label>
             </div>
             <div id="${self.id}list"></div>
@@ -576,6 +623,14 @@ version 0.1.1.20180911.233100
             e.preventDefault();
             self.ordermenu();
         },false);
+        container.querySelector('a[name="' + self.id + 'export"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            self.exportfavorites();
+        }, false);
+        container.querySelector('a[name="' + self.id + 'import"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            self.importfavorites();
+        }, false);
         container.querySelector(`a[name=${self.id}about]`).addEventListener('click',function(e) {
             e.preventDefault();
             self.aboutmenu();
